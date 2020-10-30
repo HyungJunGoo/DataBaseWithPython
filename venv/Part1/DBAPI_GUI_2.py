@@ -20,7 +20,6 @@ class DB_Utils:
 
     def updateExecutor(self, db, sql, params):
         conn = pymysql.connect(host='localhost', user='root', password='COYG1995!!', db=db, charset='utf8')
-
         try:
             with conn.cursor() as cursor:
                 cursor.execute(sql, params)
