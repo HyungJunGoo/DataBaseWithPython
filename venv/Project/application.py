@@ -2,6 +2,59 @@ import sys
 import pymysql
 from PyQt5.QtWidgets import *
 
+class DB_Utils:
+
+    def queryExecutor(self, db, sql, params):
+
+        conn = pymysql.connect(host='localhost', user='root', password='COYG1995!!', db=db, charset='utf8')
+
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+                cursor.execute(sql, params)
+                tuples = cursor.fetchall()
+                return tuples
+        except Exception as e:
+            print(e)
+            print(type(e))
+        finally:
+            conn.close()
+
+class DB_Queries:
+    def selectAllplayer(self):
+        sql = 'SELECT * FROM player'
+        params = ()
+        util = DB_Utils()
+        tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
+        return tuples
+
+    def selectDistinctTeam(self):
+        sql = "SELECT DISTINCT team_id FROM player"
+        params = ()
+        util = DB_Utils()
+        tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
+        return tuples
+
+    def selectDistinctPosition(self):
+        sql = "SELECT DISTINCT position FROM player"
+        params = ()
+        util = DB_Utils()
+        tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
+        return tuples
+
+    def selectDistinctNation(self):
+        sql = "SELECT DISTINCT nation FROM player"
+        params = ()
+        util = DB_Utils()
+        tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
+        return tuples
+
+    def selectPlayerUsingPosition (self, position):
+        sql = 'SELECT * FROM player WHERE position = %s'
+        params = (position)
+        util = DB_Utils()
+        tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
+        return tuples
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -37,7 +90,7 @@ class MainWindow(QWidget):
         radioButton7 = QRadioButton("XML", self)
         pushButton3 = QPushButton("저장", self)
 
-        tableWidget = QTableWidget(50, 6)
+        tableWidget = QTableWidget(50, 13)
 
         # set layout
         qhinnerLayout1 = QHBoxLayout()
@@ -89,6 +142,33 @@ class MainWindow(QWidget):
         qvinnerLayout.addLayout(qhinnerLayout2)
         qvinnerLayout.addWidget(tableWidget)
         qvinnerLayout.addLayout(qhinnerLayout3)
+
+
+        query = DB_Queries()
+        players = query.selectAllplayer()
+        # print(players[0])
+        # Table settings
+        columnNames = list(players[0].keys())
+        tableWidget.setHorizontalHeaderLabels(columnNames)
+
+        # Team settings (comboBox 3)
+        teams = query.selectDistinctTeam()
+        teamName = list(teams[0].keys())[0]
+        teamItems = ['없음' if team[teamName] == None else team[teamName] for team in teams]
+        comboBox1.addItems(teamItems)
+
+        # Position settings (comboBox2)
+        positions = query.selectDistinctPosition()
+        positionName = list(positions[0].keys())[0]
+        positionItems = ['없음' if position[positionName] == None else position[positionName] for position in positions]
+        comboBox2.addItems(positionItems)
+
+        # Nation settings (comboBox 3)
+        nations = query.selectDistinctNation()
+        nationName = list(nations[0].keys())[0]
+        nationItems = ['대한민국' if nation[nationName] == None else nation[nationName] for nation in nations]
+        comboBox3.addItems(nationItems)
+
 
         self.setLayout(qvinnerLayout)
 
