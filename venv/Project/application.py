@@ -90,7 +90,7 @@ class MainWindow(QWidget):
         radioButton7 = QRadioButton("XML", self)
         pushButton3 = QPushButton("저장", self)
 
-        tableWidget = QTableWidget(50, 13)
+
 
         # set layout
         qhinnerLayout1 = QHBoxLayout()
@@ -135,21 +135,28 @@ class MainWindow(QWidget):
         qhinnerLayout3.addWidget(radioButton6)
         qhinnerLayout3.addWidget(radioButton7)
         qhinnerLayout3.addWidget(pushButton3)
-        # Out Layer
-        qvinnerLayout = QVBoxLayout()
-        qvinnerLayout.addWidget(title)
-        qvinnerLayout.addLayout(qhinnerLayout1)
-        qvinnerLayout.addLayout(qhinnerLayout2)
-        qvinnerLayout.addWidget(tableWidget)
-        qvinnerLayout.addLayout(qhinnerLayout3)
+
 
 
         query = DB_Queries()
         players = query.selectAllplayer()
-        # print(players[0])
+        print(players[0])
         # Table settings
         columnNames = list(players[0].keys())
+        tableWidget = QTableWidget(len(players), 13)
         tableWidget.setHorizontalHeaderLabels(columnNames)
+
+        # Temp
+        i = 0
+
+        for player in players:
+            i += 1
+            j = 0
+            for columnName in columnNames:
+                tableWidget.setItem(i, j, QTableWidgetItem(str(player[columnName])))
+                # print(player[columnName])
+                j+=1
+
 
         # Team settings (comboBox 3)
         teams = query.selectDistinctTeam()
@@ -168,7 +175,13 @@ class MainWindow(QWidget):
         nationName = list(nations[0].keys())[0]
         nationItems = ['대한민국' if nation[nationName] == None else nation[nationName] for nation in nations]
         comboBox3.addItems(nationItems)
-
+        # Out Layer
+        qvinnerLayout = QVBoxLayout()
+        qvinnerLayout.addWidget(title)
+        qvinnerLayout.addLayout(qhinnerLayout1)
+        qvinnerLayout.addLayout(qhinnerLayout2)
+        qvinnerLayout.addWidget(tableWidget)
+        qvinnerLayout.addLayout(qhinnerLayout3)
 
         self.setLayout(qvinnerLayout)
 
