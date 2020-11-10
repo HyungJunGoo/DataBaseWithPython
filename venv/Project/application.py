@@ -266,42 +266,50 @@ class MainWindow(QWidget):
 
         i = 0
         query = DB_Queries()
-        if self.condition_team_id == '없음' and self.condition_position == '없음' and self.condition_nation == '모두':
-            players = query.selectAllplayer()
-        else:
-            if self.condition_team_id == '없음':
-                self.condition_team_id = '*'
-            if self.condition_position == '없음':
-                self.condition_position = '*'
-            if self.condition_nation == '모두':
-                self.condition_nation = '*'
-            players = query.intersection(self.condition_team_id, self.condition_position, self.condition_nation)
-
-        # if self.condition_team_id == '없음':
-        #     players_by_team_id = query.selectAllplayer()
-        # else:
-        #     players_by_team_id = query.selectPlayerUsingTeam(self.condition_team_id)
-        #
-        # if self.condition_position == '없음':
-        #     players_by_position = query.selectAllplayer()
-        # else:
-        #     players_by_position = query.selectPlayerUsingPosition(self.condition_position)
-        #
-        # players = list(set(players_by_team_id)&set(players_by_position))
-        print(players)
-        self.tableWidget.setRowCount(len(players))
+        players = query.selectAllplayer()
+        print(type(players))
         columnNames = list(players[0].keys())
-
+        filtered_player = []
         for player in players:
-            print(player)
+            status_Team = False
+            status_Position = False
+            status_nation = False
+            for columnName in columnNames:
+                if columnName == 'TEAM_ID':
+                    if self.condition_team_id == '없음':
+                        status_Team = True
+                    elif self.condition_team_id == player[columnName]:
+                        status_Team = True
+                    else: status_Team = False
+                if columnName == 'POSITION':
+                    if self.condition_position == '없음':
+                        status_Position = True
+                    elif self.condition_position == player[columnName]:
+                        status_Position = True
+                    else: status_Position = False
+                if columnName == 'NATION':
+                    if self.condition_nation == '모두':
+                        status_nation = True
+                    elif self.condition_nation != '모두':
+                        if player[columnName] is None:
+                            if self.condition_nation == '대한민국':
+                                player[columnName] = '대한민국'
+                                status_nation = True
+                        else:
+                            if self.condition_nation == player[columnName]:
+                                status_nation = True
+                    else: status_nation = False
+            if status_Team and status_Position and status_nation:
+                filtered_player.append(player)
+        print(filtered_player)
+        self.tableWidget.setRowCount(len(filtered_player))
+        for player in filtered_player:
+            # print(player)
             j = 0
             for columnName in columnNames:
                 self.tableWidget.setItem(i, j, QTableWidgetItem(str(player[columnName])))
                 j += 1
             i += 1
-
-
-
 
 
 if __name__ == "__main__":
