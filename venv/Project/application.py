@@ -96,7 +96,11 @@ class MainWindow(QWidget):
         self.condition_position = self.comboBox2.currentText()
         self.condition_nation = self.comboBox3.currentText()
         self.condition_height = self.comboBox4.currentText()
+        self.condition_height_lower = self.radioButton1.isChecked()
+        self.condition_height_higher = self.radioButton2.isChecked()
         self.condition_weight = self.comboBox5.currentText()
+        self.condition_weight_lower = self.radioButton3.isChecked()
+        self.condition_weight_higher = self.radioButton4.isChecked()
 
     def setupUI(self):
         self.setWindowTitle("Application")
@@ -115,13 +119,19 @@ class MainWindow(QWidget):
         self.comboBox3.activated.connect(self.nation_activated)
         self.comboTitle3 = QLabel("출신국", self)
         self.comboBox4 = QComboBox(self)
+        self.comboBox4.activated.connect(self.height_activated)
         self.comboTitle4 = QLabel("키", self)
         self.radioButton1 = QRadioButton("이상", self)
+        self.radioButton1.clicked.connect(self.radio1_checked)
         self.radioButton2 = QRadioButton("이하", self)
+        self.radioButton2.clicked.connect(self.radio2_checked)
         self.comboBox5 = QComboBox(self)
+        self.comboBox5.activated.connect(self.weight_activated)
         self.comboTitle5 = QLabel("몸무게", self)
         self.radioButton3 = QRadioButton("이상", self)
+        self.radioButton3.clicked.connect(self.radio3_checked)
         self.radioButton4 = QRadioButton("이하", self)
+        self.radioButton4.clicked.connect(self.radio4_checked)
 
         self.pushButton1 = QPushButton("초기화", self)
         # pushButton1.clicked.connect()
@@ -184,20 +194,19 @@ class MainWindow(QWidget):
 
         query = DB_Queries()
         players = query.selectAllplayer()
-        # print(players[0])
+
         # Table settings
         columnNames = list(players[0].keys())
         self.tableWidget = QTableWidget(len(players), 13)
         self.tableWidget.setHorizontalHeaderLabels(columnNames)
 
-        # # Temp
+        # Temp
         i = 0
 
         for player in players:
             j = 0
             for columnName in columnNames:
                 self.tableWidget.setItem(i, j, QTableWidgetItem(str(player[columnName])))
-                # print(player[columnName])
                 j+=1
             i += 1
 
@@ -249,31 +258,40 @@ class MainWindow(QWidget):
 
     def team_id_activated(self):
         self.condition_team_id = self.comboBox1.currentText()
-        print(self.condition_team_id)
-        pass
 
     def position_activated(self):
         self.condition_position = self.comboBox2.currentText()
-        print(self.condition_position)
-        pass
 
     def nation_activated(self):
         self.condition_nation = self.comboBox3.currentText()
-        print(self.condition_nation)
-        pass
+
+    def height_activated(self):
+        self.condition_height = self.comboBox4.currentText()
+    def radio1_checked(self):
+        self.condition_height_higher = True
+    def radio2_checked(self):
+        self.condition_height_lower = True
+
+    def weight_activated(self):
+        self.condition_weight = self.comboBox5.currentText()
+    def radio3_checked(self):
+        self.condition_weight_higher = True
+    def radio4_checked(self):
+        self.condition_weight_lower = True
+
 
     def searchButton_Clicked(self):
-
         i = 0
         query = DB_Queries()
         players = query.selectAllplayer()
-        print(type(players))
         columnNames = list(players[0].keys())
         filtered_player = []
         for player in players:
             status_Team = False
             status_Position = False
             status_nation = False
+            status_height = False
+            status_weight = False
             for columnName in columnNames:
                 if columnName == 'TEAM_ID':
                     if self.condition_team_id == '없음':
@@ -299,9 +317,32 @@ class MainWindow(QWidget):
                             if self.condition_nation == player[columnName]:
                                 status_nation = True
                     else: status_nation = False
-            if status_Team and status_Position and status_nation:
+                if columnName == 'HEIGHT':
+                    if self.condition_height == '없음':
+                        status_height = True
+                    else:
+                        if self.condition_height_lower:
+                            if player[columnName] is not None and int(player[columnName]) <= int(self.condition_height):
+                                status_height = True
+                        elif self.condition_height_higher:
+                            if player[columnName] is not None and int(player[columnName]) >= int(self.condition_height):
+                                status_height = True
+                        else: status_height = False
+                if columnName == 'WEIGHT':
+                    if self.condition_weight == '없음':
+                        status_weight = True
+                    else:
+                        if self.condition_weight_lower:
+                            if player[columnName] is not None and int(player[columnName]) <= int(self.condition_weight):
+                                status_weight = True
+                        elif self.condition_weight_higher:
+                            if player[columnName] is not None and int(player[columnName]) >= int(self.condition_weight):
+                                status_weight = True
+                        else: status_weight = False
+
+            if status_Team and status_Position and status_nation and status_height and status_weight:
                 filtered_player.append(player)
-        print(filtered_player)
+        # print(filtered_player)
         self.tableWidget.setRowCount(len(filtered_player))
         for player in filtered_player:
             # print(player)
