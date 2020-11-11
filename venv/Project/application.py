@@ -1,6 +1,9 @@
 import sys
 import pymysql
 from PyQt5.QtWidgets import *
+import csv
+import json
+import xml
 
 class DB_Utils:
 
@@ -16,6 +19,47 @@ class DB_Utils:
             print(type(e))
         finally:
             conn.close()
+
+    def updateExecutor(self, db, sql, params):
+        conn = pymysql.connect(host='localhost', user='root', password='COYG1995!!', db=db, charset='utf8')
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(sql, params)
+            conn.commit()
+        except Exception as e:
+            print(e)
+            print(type(e))
+        finally:
+            conn.close()
+
+class DB_Updates:
+
+    def createNewPlayerTable(self, t_name):
+        sql = f"""CREATE TABLE {t_name} (
+                        player_id     CHAR(7) 		NOT NULL,
+                        player_name   VARCHAR(20) 	NOT NULL,
+                        team_id       CHAR(3) 		NOT NULL,
+                        e_player_name VARCHAR(40),
+                        nickname      VARCHAR(30),
+                        join_YYYY     CHAR(4),
+                        position      VARCHAR(10),
+                        back_no       TINYINT,
+                        nation        VARCHAR(20),
+                        birth_date    DATE,
+                        solar         CHAR(1),
+                        height        SMALLINT,
+                        weight        SMALLINT,
+                        CONSTRAINT 	  pk_player 		PRIMARY KEY (player_id)
+                    )"""
+        params = ()
+        util = DB_Utils()
+        util.updateExecutor(db='kleague', sql=sql, params=params)
+
+    def populateNewPlayerTable(self, player_id, player_name, team_id, e_player_name, nickname, join_YYYY, position, back_no, nation, birth_date, solar, height, weight):
+        sql = "INSERT INTO playerGK VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        params = (player_id, player_name, team_id, e_player_name, nickname, join_YYYY, position, back_no, nation, birth_date, solar, height, weight)
+        util = DB_Utils()
+        util.updateExecutor(db="kleague", sql=sql, params=params)
 
 class DB_Queries:
     def selectAllplayer(self):
@@ -88,6 +132,10 @@ class MainWindow(QWidget):
         self.condition_weight = self.comboBox5.currentText()
         self.condition_weight_lower = self.radioButton3.isChecked()
         self.condition_weight_higher = self.radioButton4.isChecked()
+        self.condition_CSV = self.radioButton5.isChecked()
+        self.condition_JSON = self.radioButton6.isChecked()
+        self.condition_XML = self.radioButton7.isChecked()
+        self.filtered_player = []
 
     def setupUI(self):
         self.setWindowTitle("Application")
@@ -127,9 +175,13 @@ class MainWindow(QWidget):
 
 
         self.radioButton5 = QRadioButton("CSV", self)
+        self.radioButton5.clicked.connect(self.radio5_checked)
         self.radioButton6 = QRadioButton("JSON", self)
+        self.radioButton6.clicked.connect(self.radio6_checked)
         self.radioButton7 = QRadioButton("XML", self)
+        self.radioButton7.clicked.connect(self.radio7_checked)
         self.pushButton3 = QPushButton("저장", self)
+        self.pushButton3.clicked.connect(self.saveButton_Clicked)
 
 
 
@@ -266,6 +318,19 @@ class MainWindow(QWidget):
     def radio4_checked(self):
         self.condition_weight_lower = True
 
+    def radio5_checked(self):
+        self.condition_CSV = True
+        self.condition_JSON = False
+        self.condition_XML = False
+    def radio6_checked(self):
+        self.condition_JSON = True
+        self.condition_CSV = False
+        self.condition_XML = False
+    def radio7_checked(self):
+        self.condition_XML = True
+        self.condition_JSON = False
+        self.condition_CSV = False
+
     def clearButton_Clicked(self):
         i = 0
         query = DB_Queries()
@@ -284,7 +349,7 @@ class MainWindow(QWidget):
         query = DB_Queries()
         players = query.selectAllplayer()
         columnNames = list(players[0].keys())
-        filtered_player = []
+        self.filtered_player = []
         for player in players:
             status_Team = False
             status_Position = False
@@ -340,16 +405,31 @@ class MainWindow(QWidget):
                         else: status_weight = False
 
             if status_Team and status_Position and status_nation and status_height and status_weight:
-                filtered_player.append(player)
+                self.filtered_player.append(player)
 
-        self.tableWidget.setRowCount(len(filtered_player))
-        for player in filtered_player:
+        self.tableWidget.setRowCount(len(self.filtered_player))
+        for player in self.filtered_player:
             # print(player)
             j = 0
             for columnName in columnNames:
                 self.tableWidget.setItem(i, j, QTableWidgetItem(str(player[columnName])))
                 j += 1
             i += 1
+
+    def saveButton_Clicked(self):
+        # query = DB_Queries()
+        # print(self.filtered_player)
+        row_count = self.tableWidget.rowCount()
+        column_count = self.tableWidget.columnCount()
+        if self.condition_CSV:
+            pass # write CSV
+        elif self.condition_JSON:
+            pass #write JSON
+        elif self.condition_XML:
+            pass #write XML
+        else:
+            pass
+
 
 
 if __name__ == "__main__":
