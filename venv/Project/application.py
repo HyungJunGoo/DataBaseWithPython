@@ -5,9 +5,7 @@ from PyQt5.QtWidgets import *
 class DB_Utils:
 
     def queryExecutor(self, db, sql, params):
-
         conn = pymysql.connect(host='localhost', user='root', password='COYG1995!!', db=db, charset='utf8')
-
         try:
             with conn.cursor(pymysql.cursors.DictCursor) as cursor:
                 cursor.execute(sql, params)
@@ -76,17 +74,6 @@ class DB_Queries:
         tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
         return tuples
 
-    def intersection(self, team, position, nation):
-        sql = "SELECT * FROM player WHERE team_id = %s AND position = %s AND nation = %s"
-        sql = """PREPARE statement FROM 'SELECT * FROM player WHERE team_id = ? AND position = ? AND nation = ?;'
-                 SET @a = (%s, %s, %s);
-                 Execute statement using @a;
-                """
-        params = (team, position, nation)
-        util = DB_Utils()
-        tuples = util.queryExecutor(db='kleague', sql=sql, params=params)
-        return tuples
-
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -134,7 +121,7 @@ class MainWindow(QWidget):
         self.radioButton4.clicked.connect(self.radio4_checked)
 
         self.pushButton1 = QPushButton("초기화", self)
-        # pushButton1.clicked.connect()
+        self.pushButton1.clicked.connect(self.clearButton_Clicked)
         self.pushButton2 = QPushButton("검색", self)
         self.pushButton2.clicked.connect(self.searchButton_Clicked)
 
@@ -279,6 +266,18 @@ class MainWindow(QWidget):
     def radio4_checked(self):
         self.condition_weight_lower = True
 
+    def clearButton_Clicked(self):
+        i = 0
+        query = DB_Queries()
+        players = query.selectAllplayer()
+        columnNames = list(players[0].keys())
+        self.tableWidget.setRowCount(len(players))
+        for player in players:
+            j = 0
+            for columnName in columnNames:
+                self.tableWidget.setItem(i, j, QTableWidgetItem(str(player[columnName])))
+                j += 1
+            i += 1
 
     def searchButton_Clicked(self):
         i = 0
@@ -342,7 +341,7 @@ class MainWindow(QWidget):
 
             if status_Team and status_Position and status_nation and status_height and status_weight:
                 filtered_player.append(player)
-        # print(filtered_player)
+
         self.tableWidget.setRowCount(len(filtered_player))
         for player in filtered_player:
             # print(player)
