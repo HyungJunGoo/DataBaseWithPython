@@ -37,7 +37,7 @@ def readDB_writeXML():
     # DB 검색문 실행
     query = DB_Queries()
     players = query.selectPlayerUsingPosition("GK") # 딕셔너리 형태의 리스트
-    print(players)
+    # print(players)
     print()
 
     # Attribute BIRTH_DATE의 값을 MySQL datetime 타입에서 스트링으로 변환하겠다. (CSV에서는 패키지가 변환을 해줌)
@@ -47,12 +47,12 @@ def readDB_writeXML():
                 player[k] = v.strftime('%Y-%m-%d')
 
     newDict = dict(playerGK=players)
-    print(newDict)
+    # print(newDict)
 
     # XDM 트리 생성
     tableName = list(newDict.keys())[0]
     tableRows = list(newDict.values())[0]
-
+    print(tableName)
     rootElement = ET.Element('Table')
     rootElement.attrib['name'] = tableName
 

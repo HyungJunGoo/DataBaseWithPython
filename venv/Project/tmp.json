@@ -1,0 +1,79 @@
+{
+    "tmpPlayerTable": [
+        {
+            "PLAYER_ID": "2009055",
+            "PLAYER_NAME": "김길용",
+            "TEAM_ID": "K01",
+            "E_PLAYER_NAME": "KIM, KILYONG",
+            "NICKNAME": null,
+            "JOIN_YYYY": "2009",
+            "POSITION": "MF",
+            "BACK_NO": 22,
+            "NATION": null,
+            "BIRTH_DATE": "1986-06-03",
+            "SOLAR": "2",
+            "HEIGHT": 183,
+            "WEIGHT": 78
+        },
+        {
+            "PLAYER_ID": "2009058",
+            "PLAYER_NAME": "정도균",
+            "TEAM_ID": "K01",
+            "E_PLAYER_NAME": "JEONG, DOKYUN",
+            "NICKNAME": null,
+            "JOIN_YYYY": "2009",
+            "POSITION": "MF",
+            "BACK_NO": 6,
+            "NATION": null,
+            "BIRTH_DATE": "1987-02-01",
+            "SOLAR": "1",
+            "HEIGHT": 184,
+            "WEIGHT": 78
+        },
+        {
+            "PLAYER_ID": "2011084",
+            "PLAYER_NAME": "전광철",
+            "TEAM_ID": "K01",
+            "E_PLAYER_NAME": "JEON, KWANGCHEOL",
+            "NICKNAME": null,
+            "JOIN_YYYY": "2011",
+            "POSITION": "MF",
+            "BACK_NO": 34,
+            "NATION": null,
+            "BIRTH_DATE": "1992-09-07",
+            "SOLAR": "1",
+            "HEIGHT": 186,
+            "WEIGHT": 74
+        },
+        {
+            "PLAYER_ID": "2012036",
+            "PLAYER_NAME": "김윤섭",
+            "TEAM_ID": "K01",
+            "E_PLAYER_NAME": "KIM, YOONSUB",
+            "NICKNAME": null,
+            "JOIN_YYYY": "2012",
+            "POSITION": "MF",
+            "BACK_NO": 26,
+            "NATION": null,
+            "BIRTH_DATE": "1989-07-07",
+            "SOLAR": "1",
+            "HEIGHT": 184,
+            "WEIGHT": 77
+        },
+        {
+            "PLAYER_ID": "2012130",
+            "PLAYER_NAME": "에디",
+            "TEAM_ID": "K01",
+            "E_PLAYER_NAME": "Edmilson Alves",
+            "NICKNAME": null,
+            "JOIN_YYYY": "2012",
+            "POSITION": "MF",
+            "BACK_NO": 7,
+            "NATION": "브라질",
+            "BIRTH_DATE": "1986-05-02",
+            "SOLAR": "1",
+            "HEIGHT": 182,
+            "WEIGHT": 70
+        }
+    ]
+}

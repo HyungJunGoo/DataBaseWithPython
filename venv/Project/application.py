@@ -3,7 +3,8 @@ import pymysql
 from PyQt5.QtWidgets import *
 import csv
 import json
-import xml
+import datetime
+import xml.etree.ElementTree as ET
 
 class DB_Utils:
 
@@ -417,19 +418,61 @@ class MainWindow(QWidget):
             i += 1
 
     def saveButton_Clicked(self):
-        # query = DB_Queries()
-        # print(self.filtered_player)
         row_count = self.tableWidget.rowCount()
-        column_count = self.tableWidget.columnCount()
         if self.condition_CSV:
-            pass # write CSV
+            self.writeCSV(row_count)
         elif self.condition_JSON:
-            pass #write JSON
+            self.writeJSON()
         elif self.condition_XML:
-            pass #write XML
+            self.writeXML()
         else:
             pass
 
+    def writeCSV(self, row_count):
+        with open('tmp.csv', 'w', encoding='utf-8', newline='') as f:
+            wr = csv.writer(f)
+
+            columnNames = list(self.filtered_player[0].keys())
+            wr.writerows(columnNames)
+            for rowIDX in range(row_count):
+                row = list(self.filtered_player[rowIDX].values())
+                wr.writerow(row)
+
+    def writeJSON(self):
+        for player in self.filtered_player:
+            for k, v in player.items():
+                if isinstance(v, datetime.date):
+                    player[k] = v.strftime('%Y-%m-%d')
+
+        newDict = dict(tmpPlayerTable = self.filtered_player)
+        with open('tmp.json', 'w', encoding='utf-8') as f:
+            json.dump(newDict, f, indent=4, ensure_ascii=False)
+
+    def writeXML(self):
+        for player in self.filtered_player:
+            for k, v in player.items():
+                if isinstance(v, datetime.date):
+                    player[k] = v.strftime('%Y-%m-%d')
+        newDict = dict(tmpPlayerTable = self.filtered_player)
+
+        # XDM Tree
+        tableName = list(newDict.keys())[0]
+        tableRows = list(newDict.values())[0]
+        rootElement = ET.Element("Table")
+        rootElement.attrib['name'] = tableName
+
+        for row in tableRows:
+            rowElement = ET.Element("Row")
+            rootElement.append(rowElement)
+            for columnName in list(row.keys()):
+                if row[columnName] is None:
+                    rowElement.attrib[columnName] = ''
+                else:
+                    rowElement.attrib[columnName] = row[columnName]
+                if type(row[columnName]) == int:
+                    rowElement.attrib[columnName] = str(row[columnName])
+
+        ET.ElementTree(rootElement).write('tmp.xml', encoding='utf-8', xml_declaration=True)
 
 
 if __name__ == "__main__":
