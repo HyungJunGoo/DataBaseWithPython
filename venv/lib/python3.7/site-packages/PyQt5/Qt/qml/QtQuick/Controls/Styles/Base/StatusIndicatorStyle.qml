@@ -92,8 +92,8 @@ Style {
 
             Connections {
                 target: control
-                function onActiveChanged() { backgroundCanvas.requestPaint() }
-                function onColorChanged() { backgroundCanvas.requestPaint() }
+                onActiveChanged: backgroundCanvas.requestPaint()
+                onColorChanged: backgroundCanvas.requestPaint()
             }
 
             onPaint: {
@@ -124,8 +124,8 @@ Style {
 
                 Connections {
                     target: control
-                    function onActiveChanged() { colorCanvas.requestPaint() }
-                    function onColorChanged() { colorCanvas.requestPaint() }
+                    onActiveChanged: colorCanvas.requestPaint()
+                    onColorChanged: colorCanvas.requestPaint()
                 }
 
                 onPaint: {
@@ -157,8 +157,8 @@ Style {
 
             Connections {
                 target: control
-                function onActiveChanged() { foregroundCanvas.requestPaint() }
-                function onColorChanged() { foregroundCanvas.requestPaint() }
+                onActiveChanged: foregroundCanvas.requestPaint()
+                onColorChanged: foregroundCanvas.requestPaint()
             }
 
             onPaint: {

@@ -312,13 +312,13 @@ Style {
 
             Connections {
                 target: pieMenuStyle
-                function onStartAngleChanged() { actionCanvas.requestPaint() }
-                function onEndAngleChanged() { actionCanvas.requestPaint() }
+                onStartAngleChanged: actionCanvas.requestPaint()
+                onEndAngleChanged: actionCanvas.requestPaint()
             }
 
             Connections {
                 target: control
-                function onCurrentIndexChanged() { actionCanvas.requestPaint() }
+                onCurrentIndexChanged: actionCanvas.requestPaint()
             }
 
             onPaint: {

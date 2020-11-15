@@ -37,7 +37,6 @@
 **
 ****************************************************************************/
 
-import QtQml 2.14 as Qml
 import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Private 1.0
@@ -225,32 +224,30 @@ FocusScope {
             property alias __control: root
         }
 
-        Qml.Binding {
+        Binding {
             target: flickableItem
             property: "contentHeight"
             when: contentItem !== flickableItem
             value: contentItem ? contentItem.height : 0
-            restoreMode: Binding.RestoreBinding
         }
 
-        Qml.Binding {
+        Binding {
             target: flickableItem
             when: contentItem !== flickableItem
             property: "contentWidth"
             value: contentItem ? contentItem.width : 0
-            restoreMode: Binding.RestoreBinding
         }
 
         Connections {
             target: flickableItem
 
-            function onContentYChanged() {
+            onContentYChanged:  {
                 scroller.blockUpdates = true
                 scroller.verticalScrollBar.value = flickableItem.contentY - flickableItem.originY
                 scroller.blockUpdates = false
             }
 
-            function onContentXChanged() {
+            onContentXChanged:  {
                 scroller.blockUpdates = true
                 scroller.horizontalScrollBar.value = flickableItem.contentX - flickableItem.originX
                 scroller.blockUpdates = false
@@ -309,12 +306,12 @@ FocusScope {
             Connections {
                 target: flickableItem
 
-                function onContentYChanged() {
+                onContentYChanged: {
                     wheelArea.verticalRecursionGuard = true
                     wheelArea.verticalValue = flickableItem.contentY - flickableItem.originY
                     wheelArea.verticalRecursionGuard = false
                 }
-                function onContentXChanged() {
+                onContentXChanged: {
                     wheelArea.horizontalRecursionGuard = true
                     wheelArea.horizontalValue = flickableItem.contentX - flickableItem.originX
                     wheelArea.horizontalRecursionGuard = false

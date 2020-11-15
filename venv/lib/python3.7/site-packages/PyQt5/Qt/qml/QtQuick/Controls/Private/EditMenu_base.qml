@@ -154,7 +154,7 @@ Item {
     Connections {
         target: mouseArea
 
-        function onClicked() {
+        onClicked: {
             if (input.selectionStart === input.selectionEnd) {
                 var cursorPos = input.positionAt(mouse.x, mouse.y)
                 input.moveHandles(cursorPos, cursorPos)

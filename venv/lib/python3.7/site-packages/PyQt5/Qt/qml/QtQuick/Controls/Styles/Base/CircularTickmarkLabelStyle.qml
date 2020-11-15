@@ -246,10 +246,10 @@ Style {
 
                 Connections {
                     target: control
-                    function onMinimumValueChanged() { valueTextModel.update() }
-                    function onMaximumValueChanged() { valueTextModel.update() }
-                    function onTickmarkStepSizeChanged() { valueTextModel.update() }
-                    function onLabelStepSizeChanged() { valueTextModel.update() }
+                    onMinimumValueChanged: valueTextModel.update()
+                    onMaximumValueChanged: valueTextModel.update()
+                    onTickmarkStepSizeChanged: valueTextModel.update()
+                    onLabelStepSizeChanged: valueTextModel.update()
                 }
 
                 Repeater {

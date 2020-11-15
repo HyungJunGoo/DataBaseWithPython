@@ -47,7 +47,6 @@ def readDB_writeCSV():
         columnNames = list(players[0].keys())
         print(columnNames)
         print()
-
         wr.writerows(columnNames)
 
         for rowIDX in range(len(players)):

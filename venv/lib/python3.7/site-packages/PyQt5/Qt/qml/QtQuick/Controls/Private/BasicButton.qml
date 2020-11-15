@@ -163,7 +163,7 @@ Control {
 
     Connections {
         target: __action
-        function onTriggered() { button.clicked() }
+        onTriggered: button.clicked()
     }
 
     activeFocusOnTab: true

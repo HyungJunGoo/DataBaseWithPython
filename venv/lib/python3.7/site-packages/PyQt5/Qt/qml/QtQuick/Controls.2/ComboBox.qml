@@ -34,11 +34,11 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.impl 2.15
-import QtQuick.Templates 2.15 as T
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Controls.impl 2.12
+import QtQuick.Templates 2.12 as T
 
 T.ComboBox {
     id: control
@@ -53,7 +53,7 @@ T.ComboBox {
     rightPadding: padding + (control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
 
     delegate: ItemDelegate {
-        width: ListView.view.width
+        width: parent.width
         text: control.textRole ? (Array.isArray(control.model) ? modelData[control.textRole] : model[control.textRole]) : modelData
         palette.text: control.palette.text
         palette.highlightedText: control.palette.highlightedText
@@ -84,7 +84,6 @@ T.ComboBox {
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
-        selectByMouse: control.selectTextByMouse
 
         font: control.font
         color: control.editable ? control.palette.text : control.palette.buttonText

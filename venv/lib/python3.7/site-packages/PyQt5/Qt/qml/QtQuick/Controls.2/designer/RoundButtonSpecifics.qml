@@ -42,7 +42,6 @@ Column {
     width: parent.width
 
     Section {
-        width: parent.width
         caption: qsTr("RoundButton")
 
         SectionLayout {
@@ -52,8 +51,8 @@ Column {
             }
             SecondColumnLayout {
                 SpinBox {
-                    minimumValue: 0
-                    maximumValue: 10000
+                    maximumValue: 9999999
+                    minimumValue: -9999999
                     decimals: 0
                     backendValue: backendValues.radius
                     Layout.fillWidth: true

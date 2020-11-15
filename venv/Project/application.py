@@ -344,6 +344,13 @@ class MainWindow(QWidget):
                 self.tableWidget.setItem(i, j, QTableWidgetItem(str(player[columnName])))
                 j += 1
             i += 1
+        self.comboBox1.setCurrentText('없음')
+        self.comboBox2.setCurrentText('없음')
+        self.comboBox3.setCurrentText("모두")
+        self.comboBox4.setCurrentText('없음')
+        self.comboBox5.setCurrentText('없음')
+        self.radioButton1.setChecked(False)
+        self.radioButton2.setChecked(False)
 
     def searchButton_Clicked(self):
         i = 0
@@ -433,7 +440,8 @@ class MainWindow(QWidget):
             wr = csv.writer(f)
 
             columnNames = list(self.filtered_player[0].keys())
-            wr.writerows(columnNames)
+
+            wr.writerow(columnNames)
             for rowIDX in range(row_count):
                 row = list(self.filtered_player[rowIDX].values())
                 wr.writerow(row)

@@ -467,21 +467,13 @@ Style {
 
                             Connections {
                                 target: control
-
-                                function onVisibleMonthChanged() {
-                                    __weekNumber = control.__model.weekNumberAt(index)
-                                }
-
-                                function onVisibleYearChanged() {
-                                    __weekNumber = control.__model.weekNumberAt(index)
-                                }
+                                onVisibleMonthChanged: __weekNumber = control.__model.weekNumberAt(index)
+                                onVisibleYearChanged: __weekNumber = control.__model.weekNumberAt(index)
                             }
 
                             Connections {
                                 target: control.__model
-                                function onCountChanged() {
-                                    __weekNumber = control.__model.weekNumberAt(index)
-                                }
+                                onCountChanged: __weekNumber = control.__model.weekNumberAt(index)
                             }
 
                             property QtObject styleData: QtObject {
@@ -646,7 +638,7 @@ Style {
 
                     Connections {
                         target: control
-                        function onSelectedDateChanged() { view.selectedDateChanged() }
+                        onSelectedDateChanged: view.selectedDateChanged()
                     }
 
                     Repeater {
